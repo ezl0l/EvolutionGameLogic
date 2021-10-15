@@ -1,12 +1,20 @@
 import java.util.ArrayList;
 
 public class Animal {
-    private boolean isHunter = false;
+    private int id;
     private boolean isDeath = false;
 
     private ArrayList<Card> properties = new ArrayList<Card>();
 
+    public Animal(int id) {
+        this.id = id;
+    }
+
     public Animal() {}
+
+    public int getId() {
+        return id;
+    }
 
     public void death(){
         isDeath = true;
@@ -17,26 +25,36 @@ public class Animal {
     }
 
     public boolean isHunter() {
-        return isHunter;
-    }
-
-    public boolean addProperty(Card card){
         Object[] arr = properties.toArray();
-        if(card.getId() == 1){
-            isHunter = true;
-        }
-
-        if(arr.length == 0){
-            properties.add(card);
-            return true;
-        }
-        Card currentCard;
-        for (int i = 0; i < arr.length; i++){
-            currentCard = (Card) arr[i];
-            if(currentCard.getId() == card.getId()){
-                return false;
+        if(arr.length > 0) {
+            Card currentCard;
+            for (int i = 0; i < arr.length; i++) {
+                currentCard = (Card) arr[i];
+                if(currentCard.getCurrentProperty().getId() == Hunter.getStaticId()){
+                    return true;
+                }
             }
         }
+        return false;
+    }
+
+    public boolean addProperty(Card card, boolean isUseAdditionalProperty){
+        Object[] arr = properties.toArray();
+        if(arr.length > 0) {
+            Card currentCard;
+            for (int i = 0; i < arr.length; i++) {
+                currentCard = (Card) arr[i];
+                if (isUseAdditionalProperty) {
+                    if(currentCard.getAdditionalProperty().getId() == card.getAdditionalProperty().getId())
+                        return false;
+                } else {
+                    if (currentCard.getMainProperty().getId() == card.getMainProperty().getId()) {
+                        return false;
+                    }
+                }
+            }
+        }
+        card.setUseAdditionalProperty(isUseAdditionalProperty);
         properties.add(card);
         return true;
     }
@@ -47,18 +65,14 @@ public class Animal {
 
     public boolean canEatThis(Animal animal){
         Object[] arr = animal.getProperties().toArray();
-        animal.showProperties();
-        if(arr.length == 0){
-            return true;
-        }
-
-        AdditionalProperty currentCard;
-        for (int i = 0; i < arr.length; i++){
-            currentCard = (AdditionalProperty) arr[i];
-            System.out.println(currentCard.getId() + " " + currentCard.getType());
-            if(currentCard.getType() == 0){
-                System.out.println("f");
-                return false;
+        if(arr.length > 0) {
+            Card currentCard;
+            for (int i = 0; i < arr.length; i++) {
+                currentCard = (Card) arr[i];
+                if (currentCard.getCurrentProperty().getType() == 0) {
+                    System.out.println("f");
+                    return false;
+                }
             }
         }
         return true;
@@ -85,6 +99,8 @@ public class Animal {
                 currentCard = (Card) arr[i];
                 currentCard.info();
             }
+        }else{
+            System.out.println("No properties.");
         }
     }
 }

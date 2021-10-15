@@ -1,28 +1,37 @@
 public class Card {
-    private int id;
-    private String name;
-    private String description;
-    private AdditionalProperty property;
+    private final Property mainProperty;
+    private final Property additionalProperty;
+    private boolean isUseAdditionalProperty;
 
-    public Card(int id, String name, String description) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
+    public Card(Property mainProperty, Property additionalProperty){
+        this.mainProperty = mainProperty;
+        this.additionalProperty = additionalProperty;
     }
 
-    public String getName() {
-        return name;
+    public Property getAdditionalProperty() {
+        return additionalProperty;
     }
 
-    public String getDescription() {
-        return description;
+    public void setUseAdditionalProperty(boolean useAdditionalProperty) {
+        isUseAdditionalProperty = useAdditionalProperty;
     }
 
-    public int getId() {
-        return id;
+    public Property getMainProperty() {
+        return mainProperty;
     }
 
     public void info(){
-        System.out.println(String.format("ID: %s\nName: %s\nDescription: %s", id, name, description));
+        if(isUseAdditionalProperty)
+            additionalProperty.info();
+        else
+            mainProperty.info();
+    }
+
+    public Property getCurrentProperty(){
+        if(isUseAdditionalProperty){
+            return additionalProperty;
+        }else{
+            return mainProperty;
+        }
     }
 }
