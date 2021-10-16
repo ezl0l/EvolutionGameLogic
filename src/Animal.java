@@ -63,33 +63,6 @@ public class Animal {
         return properties;
     }
 
-    public boolean canEatThis(Animal animal){
-        Object[] arr = animal.getProperties().toArray();
-        if(arr.length > 0) {
-            Card currentCard;
-            for (int i = 0; i < arr.length; i++) {
-                currentCard = (Card) arr[i];
-                if (currentCard.getCurrentProperty().getType() == 0) {
-                    System.out.println("f");
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-    public boolean eatAnimal(Animal animal){
-        return eatAnimal(this, animal);
-    }
-
-    public static boolean eatAnimal(Animal hunter, Animal animal){
-        if(animal.isLive() && hunter.isLive() && hunter.isHunter() && hunter.canEatThis(animal)){
-            animal.death();
-            return true;
-        }
-        return false;
-    }
-
     public void showProperties(){
         Object[] arr = properties.toArray();
         if(arr.length > 0) {

@@ -23,4 +23,12 @@ public class Property {
     public void info(){
         System.out.printf("ID: %s\nName: %s\nDescription: %s\nType: %s%n", id, name, description, type);
     }
+
+    public boolean onAction(Game game) {
+        return true;
+    }
+
+    static class Types {
+        public static final int CANT_EAT = 0;
+    }
 }
