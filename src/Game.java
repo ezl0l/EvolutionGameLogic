@@ -54,7 +54,6 @@ public class Game implements Handleable {
         ArrayList<Animal> animals = new ArrayList<Animal>();
 
         Object[] players = getPlayers().toArray(new Player[0]);
-        Object[] currentAnimals;
         for(int i = 0; i < players.length; i++){
             animals.addAll(((Player) players[i]).getAnimals());
         }
