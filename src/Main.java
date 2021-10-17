@@ -1,21 +1,26 @@
 public class Main {
     public static void main(String[] args) {
-        Player player0 = new Player("Player 0");
-        Player player1 = new Player("Player 1");
+        Game mainGame = new Game(0);
 
-        Card card0 = new Card(new Mimicry(), new Hunter());
-        Card card1 = new Card(new Mimicry(), new Hunter());
+        Player player0 = new Player("First player");
+        Player player1 = new Player("Second player");
+        mainGame.addPlayer(player0);
+        mainGame.addPlayer(player1);
 
-        Animal animal0 = player0.createAnimal();
+        while(mainGame.handle()) {
+            Animal animal0 = player0.createAnimal();
+            Animal animal1 = player1.createAnimal();
+            //Animal animal2 = player1.createAnimal();
 
-        Animal animal1 = player1.createAnimal();
+            animal0.addProperty(new Card(new Mimicry(), new Carnivorous()), true);
+            animal1.addProperty(new Card(new Mimicry(), new Carnivorous()), false);
 
-        boolean success = animal0.addProperty(card0, true) &&
-                animal1.addProperty(card1, true);
+            System.out.println(player0.myAnimalEatAnimal(player1, animal1, animal0));
 
-        player0.getAnimal(animal0.getId()).showProperties();
-        player1.getAnimal(animal1.getId()).showProperties();
-
-        System.out.println(animal0.eatAnimal(animal1) + " " + success);
+            System.out.println(animal1.isLive() + " " + animal0.getFood());
+            mainGame.clearAllFood();
+            animal1.revive();
+            System.out.println(animal1.isLive() + " " + animal0.getFood());
+        }
     }
 }

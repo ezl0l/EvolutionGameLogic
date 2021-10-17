@@ -1,8 +1,10 @@
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class Player {
     private String name;
     private int food;
+    private ArrayList<Card> cards = new ArrayList<Card>();
     private ArrayList<Animal> animals = new ArrayList<Animal>();
 
     public Player(String name) {
@@ -19,15 +21,33 @@ public class Player {
         return newAnimal;
     }
 
+    public ArrayList<Card> getCards() {
+        return cards;
+    }
+
+    public boolean addCards(Collection<Card> cards){
+        return this.cards.addAll(cards);
+    }
+
     public boolean isMyAnimalCanEatThisAnimal(Player playerWithFood, Animal food, Animal hunter){
         if(hunter.isLive() && hunter.isHunter() && food.isLive()){
-            Property[] foodProperties = food.getProperties().toArray(Property[]::new);
+            Object[] foodProperties = food.getProperties().toArray();
+            Property foodProperty;
             for(int i = 0; i < foodProperties.length; i++){
-                if(foodProperties[i].getType() == Property.Types.CANT_EAT){
-                    switch(foodProperties[i].getId()){
+                foodProperty = ((Card) foodProperties[i]).getCurrentProperty();
+                if(foodProperty.getType() == Property.Types.CANT_EAT){
+                    switch(foodProperty.getId()){
                         case Mimicry.id:{
-                            // AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-                            break;
+                            if(playerWithFood.getAnimalCount() > 1) //need user decide
+                                return false;
+                        }
+                        case Camouflage.id:{
+                            if(!hunter.isHaveProperty(SharpVision.id))
+                                return false;
+                        }
+                        case Burrowing.id:{
+                            if(food.isFed())
+                                return false;
                         }
                     }
                 }
@@ -38,6 +58,19 @@ public class Player {
 
     public boolean isMyAnimalCanEatThisAnimal(Player playerWithFood, Animal food, int hunterID){
         return isMyAnimalCanEatThisAnimal(playerWithFood, food, animals.get(hunterID));
+    }
+
+    public static boolean isThisAnimalCanEatThisAnimal(Player playerWithFood, Animal food, Player playerWithHunter, Animal hunter){
+        return playerWithHunter.isMyAnimalCanEatThisAnimal(playerWithFood, food, hunter);
+    }
+
+    public boolean myAnimalEatAnimal(Player playerWithFood, Animal food, Animal hunter){
+        if(isMyAnimalCanEatThisAnimal(playerWithFood, food, hunter)){
+            food.death();
+            hunter.addToFood(Settings.EXTRA_FOOD_FOR_HUNTER);
+            return true;
+        }
+        return false;
     }
 
     public Animal getAnimal(int animalID){

@@ -10,6 +10,7 @@ public class Property {
         this.name = name;
         this.description = description;
         this.type = type;
+        this.food = food;
     }
 
     public int getType() {
@@ -18,6 +19,10 @@ public class Property {
 
     public int getId() {
         return id;
+    }
+
+    public int getFood() {
+        return food;
     }
 
     public void info(){
